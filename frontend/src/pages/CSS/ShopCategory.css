@@ -1,0 +1,43 @@
+.ShopCategory{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.banner img{
+    width: 80%;
+    padding: 30px 140px;
+}
+
+.products{
+    display: flex;
+    justify-self: center;
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: 50px 0;
+}
+.text{
+    display: flex;
+    gap: 900px;
+   justify-content: space-between;
+}
+.sort_button button{
+    width: 90px;
+    height: 35px;
+    border-radius: 30px;
+    background: white;
+    outline: none;
+    border: 1px solid black;
+    color: black;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+.sort_button button img{
+    color: black;
+}
+.sort_button button:hover{
+    background: rgb(234, 231, 231);
+}
