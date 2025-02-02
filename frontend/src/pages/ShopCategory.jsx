@@ -1,12 +1,34 @@
-import React, { useContext } from "react";
-import { ShopContext } from "../Context/ShopContext";
+import React, { useEffect, useState } from "react";
+// import { ShopContext } from "../Context/ShopContext";
 import Item from "../components/item/Item";
 import "./CSS/ShopCategory.css";
 import dropdown_icon from "../components/assets/dropdown_icon.png";
+import axios from "axios";
 
 const ShopCategory = (props) => {
-  const { all_products } = useContext(ShopContext);
-  const filtered_products = all_products.filter((item) => item.category === props.category );
+
+  // const { all_products } = useContext(ShopContext);
+  const [filtered_products, setFilterProducts] = useState([])
+  // const filtered_products = all_products.filter((item) => item.category === props.category );
+
+  const fetchFilteredProducts = async() =>{
+
+    await axios
+    .get("http://localhost:5000/api/filter",{
+      params:{category: props.category}
+    })
+    .then(({data: {filteredProduct}}) => {
+     setFilterProducts(filteredProduct)
+    })
+    .catch((err) => console.log(err));
+
+  }
+  console.log(filtered_products)
+
+  useEffect(()=>{
+    fetchFilteredProducts();
+  },[props.category])
+
   return (
     <div className="ShopCategory">
       <div className="banner">

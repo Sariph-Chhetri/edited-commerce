@@ -10,7 +10,7 @@ import './CSS/Product.css'
 const Product = () => {
    const {all_products,addToCart} = useContext(ShopContext)
    const {productID} = useParams()
-   const product = all_products.find((e) => e.id === Number(productID))
+   const product = all_products.find((e) => e._id === Number(productID))
    const related_products = all_products.filter((e) =>e.category === product.category)
 
    const [count , setCount ]= useState(0)
