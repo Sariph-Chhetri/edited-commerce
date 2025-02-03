@@ -9,9 +9,11 @@ import './CSS/Product.css'
 
 const Product = () => {
    const {all_products,addToCart} = useContext(ShopContext)
-   const {productID} = useParams()
-   const product = all_products.find((e) => e._id === Number(productID))
-   const related_products = all_products.filter((e) =>e.category === product.category)
+   const {slug} = useParams()
+   console.log("slug:",slug)
+   const product = all_products.find((e) => e.slug === slug)
+   console.log(product)
+   const related_products = all_products.filter((e) =>e.category === product.category && e.name !== product.name).slice(0,8)
 
    const [count , setCount ]= useState(0)
 
@@ -70,7 +72,7 @@ const Product = () => {
       
         <div className="related_products_item">
           {related_products.map((item,index) =>{
-              return <Item key={index} image = {item.image} item_name={item.name} new_price={item.new_price} old_price={item.old_price} id={item.id} />
+              return <Item key={index} image = {item.image} item_name={item.name} new_price={item.new_price} old_price={item.old_price} id={item.id} slug={item.slug} rating={item.rating} />
           })}
         </div>
         </div>

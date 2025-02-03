@@ -23,9 +23,10 @@ const ShopCategory = (props) => {
     .catch((err) => console.log(err));
 
   }
-  console.log(filtered_products)
+  
 
   useEffect(()=>{
+    console.log(props.category)
     fetchFilteredProducts();
   },[props.category])
 
@@ -55,6 +56,8 @@ const ShopCategory = (props) => {
             new_price={item.new_price}
             old_price={item.old_price}
             id={item.id}
+            slug={item.slug}
+            rating={item.rating}
           />
         ))}
       </div>

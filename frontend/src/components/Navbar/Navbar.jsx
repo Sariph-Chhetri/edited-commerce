@@ -41,10 +41,10 @@ const Navbar = () => {
           <Link style={{ textDecoration: "none" }} to={'/'}>Shop {menu === "shop" ? <hr /> : <></>}</Link>
         </li>
         <li onClick={() => setMenu("men")}>
-          <Link style={{ textDecoration: "none" }} to={'/mens'}>Men {menu === "men" ? <hr /> : <></>}</Link>
+          <Link style={{ textDecoration: "none" }} to={'/men'}>Men {menu === "men" ? <hr /> : <></>}</Link>
         </li>
         <li onClick={() => setMenu("women")}>
-          <Link style={{ textDecoration: "none" }} to={'/womens'}>Women {menu === "women" ? <hr /> : <></>}</Link>
+          <Link style={{ textDecoration: "none" }} to={'/women'}>Women {menu === "women" ? <hr /> : <></>}</Link>
         </li>
         <li onClick={() => setMenu("kids")}>
           <Link style={{ textDecoration: "none" }} to={'/kids'}>Kids {menu === "kids" ? <hr /> : <></>}</Link>
