@@ -8,7 +8,7 @@ const NewCollections = () => {
 
   const fetchNewCollections = async() =>{
 
-    axios.get("http://localhost:5000/api/new")
+    axios.get( process.env.REACT_APP_SERVER + "/api/new")
     .then( ({data:{newCollections}})=>{
      setNewCollection(newCollections)
     })

@@ -10,9 +10,9 @@ import './CSS/Product.css'
 const Product = () => {
    const {all_products,addToCart} = useContext(ShopContext)
    const {slug} = useParams()
-   console.log("slug:",slug)
+   
    const product = all_products.find((e) => e.slug === slug)
-   console.log(product)
+   
    const related_products = all_products.filter((e) =>e.category === product.category && e.name !== product.name).slice(0,8)
 
    const [count , setCount ]= useState(0)

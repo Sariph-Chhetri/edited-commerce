@@ -8,7 +8,7 @@ const Popular = () => {
 
   const fetchPopularProducts = async() =>{
 
-    await axios.get("http://localhost:5000/api/popular")
+    await axios.get( process.env.REACT_APP_SERVER + "/api/popular")
     .then(({data:{popularInWomen}}) =>{
       setPopularProducts(popularInWomen)
     })

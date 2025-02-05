@@ -21,7 +21,7 @@ const ShopContextProvider = (props) => {
 
   const fetchAllProducts = async () => {
     await axios
-      .get("http://localhost:5000/api/products")
+      .get( process.env.REACT_APP_SERVER + "/api/products")
       .then(({data: {allProducts}}) => {
        setAllProducts(allProducts)
       })
