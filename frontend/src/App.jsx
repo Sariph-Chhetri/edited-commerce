@@ -10,6 +10,9 @@ import Footer from './components/Footer/Footer';
 import men_banner from './components/assets/banner_mens.png'
 import women_banner from './components/assets/banner_women.png'
 import kid_banner from './components/assets/banner_kids.png'
+import { createContext } from 'react';
+
+const userAuth = createContext();
 
 function App() {
   return (
