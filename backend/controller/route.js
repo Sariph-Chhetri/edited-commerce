@@ -1,6 +1,7 @@
 import product from "../model/product.js";
 import user from "../model/user.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -54,82 +55,151 @@ export const getAllProductsFiltered = async (req, res) => {
   }
 };
 
+// export const signup = async (req, res) => {
+//   const { username, email, password } = req.body;
+
+//   if (!username || !username.trim()) {
+//     return res.status(403).json({ message: "Username must be provided" });
+//   }
+
+//   if (username.length < 3 || username.length > 20) {
+//     return res.status(403).json({
+//       message:
+//         "Username must be at least 3 characters long and cannot exceed 20 characters",
+//     });
+//   }
+
+//   if (!email.length) {
+//     return res.status(403).json({ message: "Email must be provided" });
+//   }
+
+//   if (!password.length || password.length < 8 || !password.trim()) {
+//     return res.status(403).json({
+//       message: "Password must be provided and must be atleast 8 characters",
+//     });
+//   }
+
+//   if (password.length > 20) {
+//     return res.status(403).json({ message: "Password is too long" });
+//   }
+
+//   let userExists = await user.exists({username})
+//   let emailExists = await user.exists({email})
+
+//   if(userExists){
+//     return res.status(400).json({message:"Username already taken"})
+//   }
+//   if(emailExists){
+//     return res.status(400).json({message:"Email already taken"})
+//   }
+
+//   const hashed_password = await bcrypt.hash(password, 10);
+
+//   try {
+//     const newUser = await user.create({
+//       username,
+//       email,
+//       password: hashed_password,
+//     });
+
+//     return res
+//       .status(200)
+//       .json({ newUser, message: "New user created successfully" });
+//   } 
+//   catch (error) {
+//     return res.status(500).json({
+//       error: error.message,
+//       message: "Some error occured, please try again later!",
+//     });
+//   }
+// };
+
 export const signup = async (req, res) => {
   const { username, email, password } = req.body;
 
-  if (!username.length || !username.trim()) {
-    return res.status(403).json({ message: "Username must be provided" });
+  // **Validate username**
+  if (!username || !username.trim()) {
+    return res.status(400).json({ message: "Username must be provided" });
   }
 
   if (username.length < 3 || username.length > 20) {
-    return res
-      .status(403)
-      .json({
-        message:
-          "Username must be at least 3 characters long and cannot exceed 20 characters",
-      });
+    return res.status(400).json({
+      message: "Username must be at least 3 characters long and cannot exceed 20 characters",
+    });
   }
 
-  if (!email.length) {
-    return res.status(403).json({ message: "Email must be provided" });
+  // **Validate email**
+  if (!email) {
+    return res.status(400).json({ message: "Email must be provided" });
   }
 
-  if (!password.length || password.length < 8 || !password.trim()) {
-    return res
-      .status(403)
-      .json({
-        message: "Password must be provided and must be atleast 8 characters",
-      });
+  // **Validate password**
+  if (!password || password.length < 8 || !password.trim()) {
+    return res.status(400).json({
+      message: "Password must be at least 8 characters long",
+    });
   }
+
   if (password.length > 20) {
-    return res.status(403).json({ message: "Password is too long" });
+    return res.status(400).json({ message: "Password is too long" });
   }
-
-  const hashed_password = await bcrypt.hash(password, 10);
 
   try {
+    // **Check if username or email already exists**
+    const userExists = await user.exists({ username });
+    const emailExists = await user.exists({ email });
+
+    if (userExists) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+    if (emailExists) {
+      return res.status(400).json({ message: "Email already taken" });
+    }
+
+    // **Hash password**
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // **Create new user**
     const newUser = await user.create({
       username,
       email,
-      password: hashed_password,
+      password: hashedPassword,
     });
 
-    return res
-      .status(200)
-      .json({ newUser, message: "New user created successfully" });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({
-        error: error.message,
-        message: "Some error occured, please try again later!",
-      });
+    return res.status(201).json({ newUser, message: "New user created successfully" });
+  } 
+  catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: "Some error occurred, please try again later!",
+    });
   }
 };
 
 export const login = (req, res) => {
   const { username, password } = req.body;
 
-  user.find({ username }).then((User) => {
-    const passwordCorrect = bcrypt.compare(password, User.password);
+  user
+    .find({ username })
+    .then((User) => {
+      const passwordCorrect = bcrypt.compare(password, User.password);
 
-    if (!User || !passwordCorrect) {
-      return res.status(404).json({ message: "Invalid Credentials!" });
-    }
+      if (!User || !passwordCorrect) {
+        return res.status(404).json({ message: "Invalid Credentials!" });
+      }
 
-    const token = jwt.sign({id: User._id}, process.env.SECRET_Key); // this will create a jwt toke and secret key can be used to decode the token
+      const token = jwt.sign({ id: User._id }, process.env.SECRET_Key); // this will create a jwt toke and secret key can be used to decode the token
 
-    res.cookie('authToken', token, {
+      res.cookie("authToken", token, {
         httpOnly: true,
         secure: false, // Set to true in production (HTTPS)
-        sameSite: 'Lax',
-        maxAge: 3600000 // 1 hour
-    });
-    
-    res.status(200).json({message:"Logged in successfully!"})
+        sameSite: "Lax",
+        maxAge: 3600000, // 1 hour
+      });
 
-  })
-  .catch ((error) =>{
-    res.status(500).json({ message: "Login failed", error });
-  })
+      res.status(200).json({ message: "Logged in successfully!" });
+    })
+    .catch((error) => {
+      res.status(500).json({ message: "Login failed", error });
+    });
 };

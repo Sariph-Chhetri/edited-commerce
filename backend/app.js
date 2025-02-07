@@ -3,6 +3,7 @@ import connectDb from "./config/dbConnect.js";
 import { configDotenv } from "dotenv"; 
 import router from "./routes/route.js";
 import cors from "cors"
+import cookieParser from "cookie-parser"
 
 configDotenv();
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json())
+app.use(cookieParser())
 app.use("/api",router)
 
 
