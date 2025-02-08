@@ -8,8 +8,12 @@ import cookieParser from "cookie-parser"
 configDotenv();
 const app = express();
 
-
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000", // Set to your frontend URL
+    credentials: true, // Allow sending cookies with requests
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"] // Specify allowed headers
+  }));
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api",router)

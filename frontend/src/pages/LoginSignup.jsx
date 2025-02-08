@@ -5,6 +5,7 @@ import { Toaster, toast } from "react-hot-toast";
 
 const LoginSignup = () => {
   const [form, setForm] = useState("login");
+  const [user, setUser]= useState();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -16,12 +17,13 @@ const LoginSignup = () => {
   };
 
   const handleSignup = (e) => {
+    
     e.preventDefault();
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     let { username, email, password } = formData;
 
-    if (!username.length) {
+    if (!username) {
       return toast.error("Username is required");
     }
     if (username.length < 3) {
@@ -36,7 +38,7 @@ const LoginSignup = () => {
       return toast.error("Email is invalid.");
     }
 
-    if (!password.length) {
+    if (!password) {
       return toast.error("Password is required");
     }
     if (password.length < 8) {
@@ -50,9 +52,13 @@ const LoginSignup = () => {
         password,
       })
       .then((data) => {
-        console.log(data);
         toast.success("User created successfully!");
-        // setFormData({...formData,[e.target.name]: ""})
+
+        setFormData({
+          username: "",
+          email: "",
+          password: "",
+        });
       })
       .catch((error) => {
         const errorMessage =
@@ -60,6 +66,44 @@ const LoginSignup = () => {
         toast.error(errorMessage);
       });
   };
+
+  const handleLogin = (e) =>{
+    e.preventDefault();
+
+    let { username, password } = formData;
+
+    if (!username) {
+      return toast.error("Username is required");
+    }
+
+    if (!password) {
+      return toast.error("Password is required");
+    }
+    if (password.length < 8) {
+      return toast.error("Password must be atleast 8 characters long!");
+    }
+
+    axios.post(process.env.REACT_APP_SERVER + "/api/login",{
+      username: formData.username,
+      password: formData.password
+    },{ withCredentials: true })
+    .then((data)=>{
+      setUser(data)
+      toast.success("Logged in successfully!")
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+      });
+    })
+    .catch((error) =>{
+      const errorMessage =
+          error.response?.data?.message || "Something went wrong!";
+        toast.error(errorMessage);
+
+    })
+
+  }
 
   return (
     <>
@@ -89,9 +133,9 @@ const LoginSignup = () => {
         {form === "login" && (
           <div className="login-form">
             <form>
-              <input type="text" placeholder="Enter email or username" />
-              <input type="password" placeholder="Enter password" />
-              <button type="button" className="btn login">
+              <input name="username" type="text" value={formData.username} placeholder="Enter username" onChange={handleOnChange} required />
+              <input name="password" type="password" value={formData.password} placeholder="Enter password" onChange={handleOnChange} required />
+              <button type="button" onClick={handleLogin} className="btn login">
                 login
               </button>
               <div>Forgot account</div>
