@@ -12,18 +12,19 @@ const Product = () => {
    const {slug} = useParams()
    
    const product = all_products.find((e) => e.slug === slug)
+   console.log(product)
    
    const related_products = all_products.filter((e) =>e.category === product.category && e.name !== product.name).slice(0,8)
 
-   const [count , setCount ]= useState(0)
+   const [quantity , setQuantity ]= useState(0)
 
    function countDecrease(){
-    if (count>0){
-      setCount(prevVal => prevVal - 1)
+    if (quantity > 0){
+      setQuantity(prevVal => prevVal - 1)
     }
    }
    function countIncrease(){
-      setCount(prevVal => prevVal + 1)
+      setQuantity(prevVal => prevVal + 1)
    }
   return (
  <div className='product'>
@@ -53,13 +54,13 @@ const Product = () => {
           <p className="product_quantity">
             Quantity : 
           <button onClick={countDecrease}>-</button>
-          <span>{count}</span>
+          <span>{quantity}</span>
           <button onClick={countIncrease}>+</button>
           </p>
           
           <button onClick={()=>{
-            for (let index = 0; index < count; index++) {
-              addToCart(product.id)}
+            for (let index = 0; index < quantity; index++) {
+              addToCart(quantity)}
                }
             } className='addtocart'>Add to cart</button>
           <p style={{textTransform:"capitalize"}}>Category: {product.category}</p>

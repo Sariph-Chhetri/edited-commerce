@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./CSS/LoginSignup.css";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
+import { UserContext } from "../Context/userContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
+
+ const { login} = useContext(UserContext)
+ let navigate = useNavigate();
+
   const [form, setForm] = useState("login");
-  const [user, setUser]= useState();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -83,25 +88,13 @@ const LoginSignup = () => {
       return toast.error("Password must be atleast 8 characters long!");
     }
 
-    axios.post(process.env.REACT_APP_SERVER + "/api/login",{
-      username: formData.username,
-      password: formData.password
-    },{ withCredentials: true })
-    .then((data)=>{
-      setUser(data)
-      toast.success("Logged in successfully!")
-      setFormData({
-        username: "",
-        email: "",
-        password: "",
-      });
-    })
-    .catch((error) =>{
-      const errorMessage =
-          error.response?.data?.message || "Something went wrong!";
-        toast.error(errorMessage);
+  login(username,password, navigate,()=>{
+    setFormData({
+      username: "",
+      password: "",
+    });
+  });
 
-    })
 
   }
 

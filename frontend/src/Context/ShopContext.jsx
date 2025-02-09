@@ -1,48 +1,44 @@
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
-import all_product from "../components/assets/all_product";
 
 export const ShopContext = createContext(null);
 
 const ShopContextProvider = (props) => {
   const [all_products, setAllProducts] = useState([]);
-
-  const defaultCart = () => {
-    let cart = {};
-
-    for (let index = 0; index < all_products.length; index++) {
-      cart[index] = 0;
-    }
-    return cart;
-  };
-
-  const [cartItem, setCartData] = useState(defaultCart);
-  
+  const [cartItem, setCartData] = useState({}); // Start with an empty object
 
   const fetchAllProducts = async () => {
-    await axios
-      .get( process.env.REACT_APP_SERVER + "/api/products")
-      .then(({data: {allProducts}}) => {
-       setAllProducts(allProducts)
-      })
-      .catch((err) => console.log(err));
+    try {
+      const { data: { allProducts } } = await axios.get(process.env.REACT_APP_SERVER + "/api/products");
+      setAllProducts(allProducts);
+
+      // ✅ Initialize cart after fetching products
+      const initialCart = {};
+      allProducts.forEach(product => {
+        initialCart[product._id] = 0; // Set quantity to 0 for each product
+      });
+      setCartData(initialCart);
+    } catch (err) {
+      console.log(err);
+    }
   };
+  console.log(cartItem)
 
   useEffect(() => {
     fetchAllProducts();
-  }, []); 
+  }, []);
 
   const addToCart = (itemID) => {
     setCartData((prevData) => ({
       ...prevData,
-      [itemID]: prevData[itemID] + 1,
+      [itemID]: (prevData[itemID] || 0) + 1, // Ensure undefined values are handled
     }));
   };
 
   const removeFromCart = (itemID) => {
     setCartData((prevData) => ({
       ...prevData,
-      [itemID]: prevData[itemID] - 1,
+      [itemID]: Math.max((prevData[itemID] || 0) - 1, 0), // Prevent negative values
     }));
   };
 

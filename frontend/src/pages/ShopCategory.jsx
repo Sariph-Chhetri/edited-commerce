@@ -26,7 +26,7 @@ const ShopCategory = (props) => {
   
 
   useEffect(()=>{
-    console.log(props.category)
+    
     fetchFilteredProducts();
   },[props.category])
 

@@ -210,9 +210,14 @@ export const login = async(req, res) => {
         maxAge: 3600000, // 1 hour
       });
 
-      res.status(200).json({ message: "Logged in successfully!" });
+      res.status(200).json({ message: "Logged in successfully!", User });
     })
     .catch((error) => {
       res.status(500).json({ message: "Login failed", error:error.message });
     });
 };
+
+export const logout = async ( req, res) =>{
+  res.clearCookie("authToken")
+  res.status(200).json({ message: "Logged out successfully" });
+}

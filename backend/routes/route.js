@@ -1,5 +1,5 @@
 import express from "express"
-import {getAllProducts, getAllProductsFiltered, getPopularInWomen, getNewCollection, signup, login} from "../controller/route.js"
+import {getAllProducts, getAllProductsFiltered, getPopularInWomen, getNewCollection, signup, login,logout} from "../controller/route.js"
 const router = express();
 
 router.route("/products").get(getAllProducts)
@@ -8,5 +8,6 @@ router.route("/new").get(getNewCollection)
 router.route("/filter").get(getAllProductsFiltered)
 router.route("/signup").post(signup)
 router.route("/login").post(login)
+router.route("/logout").post(logout)
 
 export default router;
