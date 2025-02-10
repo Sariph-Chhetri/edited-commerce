@@ -10,7 +10,6 @@ export const UserProvider = ({ children }) => {
         return storedData ? JSON.parse(storedData) : null; // ✅ Parse JSON properly
     });
 
-
     const login = (username, password, navigate, resetform) => {
         axios.post(process.env.REACT_APP_SERVER + "/api/login", { username, password }, { withCredentials: true })
           .then(({ data }) => {

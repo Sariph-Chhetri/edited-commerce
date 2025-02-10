@@ -221,3 +221,68 @@ export const logout = async ( req, res) =>{
   res.clearCookie("authToken")
   res.status(200).json({ message: "Logged out successfully" });
 }
+
+// export const addCart =  (req, res) => {
+//   const { userId, itemId, quantity } = req.body;
+
+//   user.findById(itemId)
+//     .then((User) => {
+//       if (!User) {
+//         return res.status(404).json({ message: "User not found" });
+//       }
+
+//       // Check if item already exists in cart
+//       const existingItem = user.cart.find((item) => item.itemId.toString() === itemId);
+
+//       if (existingItem) {
+//         // If item exists, update quantity
+//         existingItem.quantity += quantity;
+//       } else {
+//         // If item doesn't exist, add new item
+//         User.cart.push({ itemId, quantity });
+//       }
+
+//       return User.save();
+//     })
+//     .then((updatedUser) => {
+//       res.status(200).json({ message: "Item added to cart", cart: updatedUser.cart });
+//     })
+//     .catch((error) => {
+//       console.error("Error adding to cart:", error);
+//       res.status(500).json({ message: "Internal server error", error });
+//     });
+//   }
+
+// UPDATE CART
+export const updateCart = async (req, res) => {
+  const { userId, itemID, quantity } = req.body;
+
+  try {
+    // Find the user by ID
+    const User = await user.findById(userId);
+
+    if (!User) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the product already exists in the cart
+    const cartItem = User.cart.find(item => item._id.toString() === itemID);
+
+    if (cartItem) {
+      // Update quantity if the product is already in the cart
+      cartItem.quantity += quantity;
+    } else {
+      // Add new product to the cart
+      User.cart.push({ productId: itemID, quantity });
+    }
+
+    // Save the updated user
+    await User.save();
+
+    // Send the updated cart as a response
+    res.status(200).json({ message: "Cart updated successfully", cart: User.cart });
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
