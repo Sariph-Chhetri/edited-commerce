@@ -4,7 +4,11 @@ import { ShopContext } from "../../Context/ShopContext";
 
 const CartMain = (props) => {
     const {  removeFromCart } = useContext(ShopContext);  
-    
+    const handleRemoveCart = ()=>{
+
+      removeFromCart(props.id)
+
+    }
   return (
     <div>
      
@@ -17,7 +21,7 @@ const CartMain = (props) => {
       <img
       className="pxleft"
         style={{ cursor: "pointer" }}
-        onClick={() => {removeFromCart(props.id);}}
+        onClick={handleRemoveCart}
         src={remove_icon} alt=""/>               
   </div>
   <hr />

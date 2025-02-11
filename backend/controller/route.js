@@ -265,9 +265,10 @@ export const updateCart = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the product already exists in the cart
-    const cartItem = User.cart.find(item => item._id.toString() === itemID);
-
+    // Check if the product already exists in the cart  
+  
+    const cartItem = User.cart.find(item => item.productId.toString() === itemID);
+  
     if (cartItem) {
       // Update quantity if the product is already in the cart
       cartItem.quantity += quantity;
@@ -286,3 +287,38 @@ export const updateCart = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+export const removefromcart = async (req, res)=>{
+
+const { userId, itemID} = req.body;
+
+try {
+ const User = await user.findById(userId)
+ if (!User) {
+  return res.status(404).json({ message: "User not found" });
+}
+
+// Check if the product already exists in the cart  
+
+const cartItem = User.cart.find(item => item.productId.toString() === itemID);
+if (!cartItem) {
+  return res.status(404).json({ message: "Product not found in cart" });
+}
+
+ if(cartItem.quantity > 1){
+  cartItem.quantity -= 1;
+ 
+} else {
+  User.cart = User.cart.filter((item) => item.productId.toString() != itemID )
+}
+
+// Save the updated user
+await User.save();
+res.status(200).json({ message: "Cart removed successfully", cart: User.cart });
+  
+} catch (error) {
+  console.error("Error removing from cart:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+}
+  
+}

@@ -8,7 +8,7 @@ import Item from "../components/item/Item";
 import "./CSS/Product.css";
 
 const Product = () => {
-  const { all_products, addToCart, updateCart, cartItem } = useContext(ShopContext);
+  const { all_products, addToCart} = useContext(ShopContext);
   const { slug } = useParams();
 
   const product = all_products.find((e) => e.slug === slug);
@@ -72,12 +72,7 @@ const Product = () => {
 
           <button
             onClick={() => {
-              if (quantity > 0) {
-                addToCart(product._id, quantity, async(itemId) => {
-                  setQuantity(0);
-                 await updateCart(cartItem,itemId,quantity);
-                });
-              }
+              addToCart(product._id, quantity)
             }}
             className="addtocart"
           >
