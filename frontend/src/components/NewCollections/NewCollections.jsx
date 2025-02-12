@@ -35,6 +35,7 @@ const NewCollections = () => {
                 new_price={item.new_price}
                 old_price={item.old_price}
                 id={item._id}
+                slug={item.slug}
               />
             );
           })}

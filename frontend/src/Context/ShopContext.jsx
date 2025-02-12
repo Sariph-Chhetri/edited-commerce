@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "./userContext";
-import toast from "react-hot-toast";
 
 export const ShopContext = createContext(null);
 
@@ -30,13 +29,14 @@ const ShopContextProvider = (props) => {
    
     axios.put(process.env.REACT_APP_SERVER + "/api/updatecart",{userId, itemID, quantity })
     .then(({data:{cart}})=> {
-      setUser((prevUser) => ({
-        ...prevUser,
+      const updatedUser = {
+        ...user,
         User: {
-          ...prevUser.User,  
-          cart: cart,  
-        }
-      }));
+          ...user.User,
+          cart: cart,
+        },
+      };
+      setUser(updatedUser);
       
     }
       )
@@ -51,14 +51,14 @@ const ShopContextProvider = (props) => {
 
     axios.post(process.env.REACT_APP_SERVER + "/api/removecart",{userId, itemID })
     .then(({data:{cart}})=> {
-
-      setUser((prevUser) => ({
-        ...prevUser,
+      const updatedUser = {
+        ...user,
         User: {
-          ...prevUser.User,  
-          cart: cart, 
-        }
-      }));
+          ...user.User,
+          cart: cart,
+        },
+      };
+      setUser(updatedUser);
       
     }
       )
@@ -69,7 +69,11 @@ const ShopContextProvider = (props) => {
   }
 
   const cartCount = () => {
-   return user.User.cart.length
+    if(user){
+      return user.User.cart.length
+    }
+    return 0;
+  
   };
 
   const ContextValue = {

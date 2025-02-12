@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../Context/userContext";
 
 const CartItems = () => {
-  const {user:{User:{cart}}} = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const cart = user?.User?.cart || [];
+
   const { cartCount, all_products } = useContext(ShopContext);
 
 const mergedArray = cart.map((cartItem) => {

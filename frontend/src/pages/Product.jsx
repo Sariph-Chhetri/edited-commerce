@@ -1,15 +1,20 @@
 import React, { useContext, useState } from "react";
 import Breadcrum from "../components/breadcrum/Breadcrum";
 import { ShopContext } from "../Context/ShopContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import star_icon from "../components/assets/star_icon.png";
 import star_dull_icon from "../components/assets/star_dull_icon.png";
 import Item from "../components/item/Item";
 import "./CSS/Product.css";
+import toast, { Toaster } from "react-hot-toast";
+import { UserContext } from "../Context/userContext";
 
 const Product = () => {
   const { all_products, addToCart} = useContext(ShopContext);
+  const {user} = useContext(UserContext);
   const { slug } = useParams();
+
+  const navigate = useNavigate();
 
   const product = all_products.find((e) => e.slug === slug);
 
@@ -29,6 +34,7 @@ const Product = () => {
   }
   return (
     <div className="product">
+      <Toaster />
       <Breadcrum product={product} />
       <div className="productMain">
         <div className="mini_image">
@@ -72,7 +78,21 @@ const Product = () => {
 
           <button
             onClick={() => {
-              addToCart(product._id, quantity)
+              if(quantity < 1){
+                toast.error("Select the quantity first")
+              }
+               else{
+                if(user){
+                  addToCart(product._id, quantity)
+                  setQuantity(0)
+                  toast.success("Product added to cart")
+                }
+                if(!user){
+                  toast.error("You need to have an account to add the product!")
+                  navigate("/login")
+                }
+               }
+             
             }}
             className="addtocart"
           >

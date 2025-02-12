@@ -2,15 +2,16 @@ import React, { useContext, useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import cart_icon from "../assets/cart_icon.png";
 import "./Navbar.css";
-import { data, Link, useLocation } from "react-router-dom";
+import {  Link, useLocation, useNavigate } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
 import { UserContext } from "../../Context/userContext";
 import axios from "axios";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Navbar = () => {
   const { user, setUser } = useContext(UserContext);
- 
+
+  const navigate = useNavigate();
 
   // Get the current location
   const location = useLocation();
@@ -26,9 +27,10 @@ const Navbar = () => {
 
     axios.post(process.env.REACT_APP_SERVER + ("/api/logout"),{withCredentials: true})
     .then( () => {
-      toast.success("Logged Out successfully");
+      toast.success("User Logged out");
       setUser(null);
       localStorage.removeItem("userData");
+      navigate("/")
     })
 
   }
@@ -51,6 +53,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
+      <Toaster />
       <div className="navlogo">
         <Link to={"/"}>
           <img src={logo} alt="nav logo" />
