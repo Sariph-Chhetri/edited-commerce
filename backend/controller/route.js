@@ -39,14 +39,24 @@ export const getNewCollection = async (req, res) => {
 };
 
 export const getAllProductsFiltered = async (req, res) => {
-  const { category } = req.query;
-  const queryObj = {};
+  const { sortby, category } = req.query;
+  let queryObj = {};
   if (category) {
-    queryObj.category = category;
+    queryObj = {category : category}
+  }
+
+  let sortObj = {};
+
+  if(sortby ==="high_to_low"){
+    sortObj = {new_price: -1}
+  }
+  
+  if(sortby ==="low_to_high"){
+    sortObj = {new_price : 1}
   }
 
   try {
-    const filteredProduct = await product.find(queryObj).limit(12);
+    const filteredProduct = await product.find(queryObj).sort(sortObj).limit(12);
     return res
       .status(200)
       .json({ filteredProduct, nbHits: filteredProduct.length });
@@ -114,68 +124,6 @@ export const signup = async (req, res) => {
   }
 };
 
-// export const signup = async (req, res) => {
-//   const { username, email, password } = req.body;
-
-//   // **Validate username**
-//   if (!username || !username.trim()) {
-//     return res.status(400).json({ message: "Username must be provided" });
-//   }
-
-//   if (username.length < 3 || username.length > 20) {
-//     return res.status(400).json({
-//       message: "Username must be at least 3 characters long and cannot exceed 20 characters",
-//     });
-//   }
-
-//   // **Validate email**
-//   if (!email) {
-//     return res.status(400).json({ message: "Email must be provided" });
-//   }
-
-//   // **Validate password**
-//   if (!password || password.length < 8 || !password.trim()) {
-//     return res.status(400).json({
-//       message: "Password must be at least 8 characters long",
-//     });
-//   }
-
-//   if (password.length > 20) {
-//     return res.status(400).json({ message: "Password is too long" });
-//   }
-
-//   try {
-//     // **Check if username or email already exists**
-//     const userExists = await user.exists({ username });
-//     const emailExists = await user.exists({ email });
-
-//     if (userExists) {
-//       return res.status(400).json({ message: "Username already taken" });
-//     }
-//     if (emailExists) {
-//       return res.status(400).json({ message: "Email already taken" });
-//     }
-
-//     // **Hash password**
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     // **Create new user**
-//     const newUser = await user.create({
-//       username,
-//       email,
-//       password: hashedPassword,
-//     });
-
-//     return res.status(201).json({ newUser, message: "New user created successfully" });
-//   } 
-//   catch (error) {
-//     return res.status(500).json({
-//       error: error.message,
-//       message: "Some error occurred, please try again later!",
-//     });
-//   }
-// };
-
 export const login = async(req, res) => {
   const { username, password } = req.body;
 
@@ -222,38 +170,6 @@ export const logout = async ( req, res) =>{
   res.status(200).json({ message: "Logged out successfully" });
 }
 
-// export const addCart =  (req, res) => {
-//   const { userId, itemId, quantity } = req.body;
-
-//   user.findById(itemId)
-//     .then((User) => {
-//       if (!User) {
-//         return res.status(404).json({ message: "User not found" });
-//       }
-
-//       // Check if item already exists in cart
-//       const existingItem = user.cart.find((item) => item.itemId.toString() === itemId);
-
-//       if (existingItem) {
-//         // If item exists, update quantity
-//         existingItem.quantity += quantity;
-//       } else {
-//         // If item doesn't exist, add new item
-//         User.cart.push({ itemId, quantity });
-//       }
-
-//       return User.save();
-//     })
-//     .then((updatedUser) => {
-//       res.status(200).json({ message: "Item added to cart", cart: updatedUser.cart });
-//     })
-//     .catch((error) => {
-//       console.error("Error adding to cart:", error);
-//       res.status(500).json({ message: "Internal server error", error });
-//     });
-//   }
-
-// UPDATE CART
 export const updateCart = async (req, res) => {
   const { userId, itemID, quantity } = req.body;
 

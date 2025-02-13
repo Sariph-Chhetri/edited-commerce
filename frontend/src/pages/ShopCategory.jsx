@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from "react";
-// import { ShopContext } from "../Context/ShopContext";
+import React, { useContext, useEffect, useState } from "react";
+import { ShopContext } from "../Context/ShopContext";
 import Item from "../components/item/Item";
 import "./CSS/ShopCategory.css";
-import dropdown_icon from "../components/assets/dropdown_icon.png";
 import axios from "axios";
 
 const ShopCategory = (props) => {
 
-  // const { all_products } = useContext(ShopContext);
+  const [ sortby , setSort ] = useState("")
   const [filtered_products, setFilterProducts] = useState([])
-  // const filtered_products = all_products.filter((item) => item.category === props.category );
+  const [nbProducts, setNbProducts] = useState();
+  const { all_products} = useContext(ShopContext);
+
+  const handleSort = (e) =>{
+  const option = e.target.value;
+  setSort(option)
+  }
 
   const fetchFilteredProducts = async() =>{
 
     await axios
     .get("http://localhost:5000/api/filter",{
-      params:{category: props.category}
+      params:{sortby, category: props.category}
     })
-    .then(({data: {filteredProduct}}) => {
+    .then(({data: {filteredProduct, nbHits}}) => {
      setFilterProducts(filteredProduct)
+     setNbProducts(nbHits)
     })
     .catch((err) => console.log(err));
 
@@ -28,7 +34,7 @@ const ShopCategory = (props) => {
   useEffect(()=>{
     
     fetchFilteredProducts();
-  },[props.category])
+  },[props.category, sortby])
 
   return (
     <div className="ShopCategory">
@@ -37,14 +43,16 @@ const ShopCategory = (props) => {
       </div>
       <div className="text">
         <div>
-          <span style={{ fontWeight: 600 }}>Showing 1-12 </span>out of 36
-          products
+          <span style={{ fontWeight: 600 }}>Showing {nbProducts} </span>out of {all_products.length} products
         </div>
-        <div className="sort_button">
-          <button>
-            Sort by <img src={dropdown_icon} alt="" />
-          </button>
-        </div>
+        <form action="">
+          <label htmlFor="sort">Sort by: </label>
+          <select name="sort_by" value={sortby} id="sort" onChange={handleSort}>
+            <option value="">Best match</option>
+            <option value="low_to_high">Low to high</option>
+            <option value="high_to_low">High to low</option>
+          </select>
+        </form>
       </div>
       <div className="products">
 

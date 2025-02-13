@@ -22,10 +22,10 @@
     gap: 900px;
    justify-content: space-between;
 }
-.sort_button button{
-    width: 90px;
+#sort{
+    width: auto;
     height: 35px;
-    border-radius: 30px;
+    border-radius: 5px;
     background: white;
     outline: none;
     border: 1px solid black;
@@ -34,6 +34,7 @@
     font-weight: 500;
     cursor: pointer;
     padding: 5px 10px;
+    margin-left: 5px;
 }
 .sort_button button img{
     color: black;
