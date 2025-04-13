@@ -2,39 +2,43 @@ import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../Context/ShopContext";
 import Item from "../components/item/Item";
 import "./CSS/ShopCategory.css";
-import axios from "axios";
+import all_products from "../components/assets/all_product"
+// import axios from "axios";
 
 const ShopCategory = (props) => {
 
+  const filtered_products = all_products.filter((product)=> product.category === props.category )
+  console.log(filtered_products)
+
   const [ sortby , setSort ] = useState("")
-  const [filtered_products, setFilterProducts] = useState([])
+  // const [filtered_products, setFilterProducts] = useState([])
   const [nbProducts, setNbProducts] = useState();
-  const { all_products} = useContext(ShopContext);
+  // const { all_products} = useContext(ShopContext);
 
   const handleSort = (e) =>{
-  const option = e.target.value;
-  setSort(option)
+  // const option = e.target.value;
+  // setSort(option)
   }
 
-  const fetchFilteredProducts = async() =>{
+  // const fetchFilteredProducts = async() =>{
 
-    await axios
-    .get("http://localhost:5000/api/filter",{
-      params:{sortby, category: props.category}
-    })
-    .then(({data: {filteredProduct, nbHits}}) => {
-     setFilterProducts(filteredProduct)
-     setNbProducts(nbHits)
-    })
-    .catch((err) => console.log(err));
+  //   await axios
+  //   .get("http://localhost:5000/api/filter",{
+  //     params:{sortby, category: props.category}
+  //   })
+  //   .then(({data: {filteredProduct, nbHits}}) => {
+  //    setFilterProducts(filteredProduct)
+  //    setNbProducts(nbHits)
+  //   })
+  //   .catch((err) => console.log(err));
 
-  }
+  // }
   
 
-  useEffect(()=>{
+  // useEffect(()=>{
     
-    fetchFilteredProducts();
-  },[props.category, sortby])
+  //   fetchFilteredProducts();
+  // },[props.category, sortby])
 
   return (
     <div className="ShopCategory">
@@ -64,8 +68,7 @@ const ShopCategory = (props) => {
             new_price={item.new_price}
             old_price={item.old_price}
             id={item.id}
-            slug={item.slug}
-            rating={item.rating}
+            slug={item.id}
           />
         ))}
       </div>

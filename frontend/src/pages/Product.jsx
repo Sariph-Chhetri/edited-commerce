@@ -6,31 +6,37 @@ import star_icon from "../components/assets/star_icon.png";
 import star_dull_icon from "../components/assets/star_dull_icon.png";
 import Item from "../components/item/Item";
 import "./CSS/Product.css";
+import all_products from "../components/assets/all_product";
 import toast, { Toaster } from "react-hot-toast";
-import { UserContext } from "../Context/userContext";
+// import { UserContext } from "../Context/userContext";
 
 const Product = () => {
-  const { all_products, addToCart} = useContext(ShopContext);
-  const {user} = useContext(UserContext);
+  let addToCart;
+  // const { all_products, addToCart} = useContext(ShopContext);
+  // const {user} = useContext(UserContext);
+  let user;
   const { slug } = useParams();
+ 
 
   const navigate = useNavigate();
 
-  const product = all_products.find((e) => e.slug === slug);
+  const result = all_products.filter((e) => e.id === Number(slug));
+  const product  = result[0];
 
   const related_products = all_products
-    .filter((e) => e.category === product.category && e.name !== product.name)
-    .slice(0, 8);
+    .filter((e) => e.category === product.category)
+
+    console.log(related_products)
 
   const [quantity, setQuantity] = useState(0);
 
   function countDecrease() {
-    if (quantity > 0) {
-      setQuantity((prevVal) => prevVal - 1);
-    }
+    // if (quantity > 0) {
+    //   setQuantity((prevVal) => prevVal - 1);
+    // }
   }
   function countIncrease() {
-    setQuantity((prevVal) => prevVal + 1);
+    // setQuantity((prevVal) => prevVal + 1);
   }
   return (
     <div className="product">
@@ -87,10 +93,10 @@ const Product = () => {
                   setQuantity(0)
                   toast.success("Product added to cart")
                 }
-                if(!user){
-                  toast.error("You need to have an account to add the product!")
-                  navigate("/login")
-                }
+                // if(!user){
+                //   toast.error("You need to have an account to add the product!")
+                //   navigate("/login")
+                // }
                }
              
             }}
@@ -118,8 +124,8 @@ const Product = () => {
                 new_price={item.new_price}
                 old_price={item.old_price}
                 id={item.id}
-                slug={item.slug}
-                rating={item.rating}
+                slug={item.id}
+              
               />
             );
           })}

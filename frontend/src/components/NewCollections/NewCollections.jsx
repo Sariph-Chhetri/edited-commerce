@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Item from "../item/Item";
 import "../NewCollections/NewCollections.css";
-import axios from "axios";
+// import axios from "axios";
+import newCollection from "../assets/new_collections";
 
 const NewCollections = () => {
-  const [newCollection, setNewCollection] = useState([]);
+//   const [newCollection, setNewCollection] = useState([]);
 
-  const fetchNewCollections = async() =>{
+//   const fetchNewCollections = async() =>{
 
-    axios.get( process.env.REACT_APP_SERVER + "/api/new")
-    .then( ({data:{newCollections}})=>{
-     setNewCollection(newCollections)
-    })
-    .catch(err=>console.log(err))
+//     axios.get( process.env.REACT_APP_SERVER + "/api/new")
+//     .then( ({data:{newCollections}})=>{
+//      setNewCollection(newCollections)
+//     })
+//     .catch(err=>console.log(err))
 
-  }
+//   }
 
-  useEffect(()=>{
-    fetchNewCollections();
-  },[])
+//   useEffect(()=>{
+//     fetchNewCollections();
+//   },[])
 
   return (
     <div className="collection">
@@ -34,8 +35,7 @@ const NewCollections = () => {
                 item_name={item.name}
                 new_price={item.new_price}
                 old_price={item.old_price}
-                id={item._id}
-                slug={item.slug}
+                slug={item.id}
               />
             );
           })}
